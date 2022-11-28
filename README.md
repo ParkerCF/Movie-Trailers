@@ -1,2 +1,2 @@
 # Movie-Trailers
-Application that pulls movie trailers on youtube and corresponding rotten tomato scores
+this Application looks up movie trailers and returns the imdb and youtube page for trailers and movie score  

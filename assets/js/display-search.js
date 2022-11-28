@@ -92,25 +92,19 @@ fetch(locQueryUrl2, options)
 .catch((error) => console.error("FETCH ERROR:", error));
 
 function displayYoutube(data) {
-  const youtube = data[0].channel;
-  const youtubeDiv = document.getElementById("Movie");
-  const heading = document.createElement("h2");
-  heading.innerHTML = youtube;
-  console.log(youtube)
-
-  youtubeDiv.appendChild(heading);
+  const youtube = data[0].link;
+  console.log(youtube);
+  const youtubeDiv = document.getElementById("Youtube");
 
   
-  // const youtubeLink = document.createElement("a");
-  // movieLink.setAttribute('href', 'https://www.imdb.com/title/' + movie.imdbID) 
+  const link = document.createElement("a");
+  link.setAttribute('href', youtube)
+
+  const heading = document.createElement("h3");
+  heading.innerHTML = "Movie Trailer";
+
+  link.append(heading);
+  youtubeDiv.appendChild(link);
   
-
-  // const moviePoster = document.createElement("img");
-  // moviePoster.src = movie.Poster
-
-  // movieLink.appendChild(moviePoster);
-  // movieDiv.appendChild(heading);  
-  // movieDiv.appendChild(movieLink);
-
-}   
+}
 }

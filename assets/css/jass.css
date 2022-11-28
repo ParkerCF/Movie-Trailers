@@ -880,7 +880,7 @@ a:hover {
 }
 
 .text-primary {
-  color: #000000 !important;
+  color: #2b3ddd !important;
 }
 
 .text-info {
@@ -914,6 +914,7 @@ a:hover {
 .text-link {
   color: #1b89bc !important;
 }
+
 
 /* BACKGROUND UTILS */
 .bg-primary {
@@ -1018,7 +1019,7 @@ a:hover {
 }
 
 .btn.btn-danger {
-  background-color: #e64ccc;
+  background-color: #eb75d7;
   color: #ffffff;
 }
 

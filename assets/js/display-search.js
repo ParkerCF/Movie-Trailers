@@ -9,6 +9,7 @@ function getParams() {
 
  
   searchApi(query);
+  searchApi2(query);
 }
 getParams();
 
@@ -63,49 +64,53 @@ fetch(locQueryUrl, options)
   }   
 }
 
-// function start() {
-//   // Initializes the client with the API key and the Translate API.
-//   gapi.client.init({
-//     'apiKey': 'AIzaSyCOYLbVBlcpAeEP3EhpHdBImhg3srwnObE',
-//     'discoveryDocs': ['https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest'],
-      
-//   }).then(onClientInitSucess).catch(() => { console.log("failure") })
-// }
-// // Called automatically when YouTube API interface is loaded (see line 9).
-// function onYouTubeApiLoad() {
-//   gapi.client.setApiKey('AIzaSyCOYLbVBlcpAeEP3EhpHdBImhg3srwnObE');
-// }
+function searchApi2(query) {
 
-// // Called when the search button is clicked in the html code
+var locQueryUrl2 = 'https://ytube-videos.p.rapidapi.com/search-video?q='+ query + '%20trailer' + '%20video&max=1&lang=EN';
 
-// function onClientInitSucess() {
-//   searchBtn.addEventListener('click', search)
-// }
+console.log(locQueryUrl2);
+var options = {
+	method: 'GET',
+	headers: {
+		'X-RapidAPI-Key': 'af3c4ac556msh4800601e994581cp141e52jsn02c4fb8865e3',
+		'X-RapidAPI-Host': 'ytube-videos.p.rapidapi.com'
+	}
+};
 
-// var searchBtn = document.querySelector('btn')
-// gapi.load('client', start)
+fetch(locQueryUrl2, options)
+.then((response) => {
+  if (response.ok) {
+    return response.json();
+  } else {
+    throw new Error("NETWORK RESPONSE ERROR");
+  }
+})
+.then(data => {
+  console.log(data);
+  displayYoutube(data)
+})
+.catch((error) => console.error("FETCH ERROR:", error));
 
+function displayYoutube(data) {
+  const youtube = data[0].channel;
+  const youtubeDiv = document.getElementById("Movie");
+  const heading = document.createElement("h2");
+  heading.innerHTML = youtube;
+  console.log(youtube)
 
+  youtubeDiv.appendChild(heading);
 
+  
+  // const youtubeLink = document.createElement("a");
+  // movieLink.setAttribute('href', 'https://www.imdb.com/title/' + movie.imdbID) 
+  
 
+  // const moviePoster = document.createElement("img");
+  // moviePoster.src = movie.Poster
 
-// function search() {
-//     var query = document.getElementById('search-input').value;
-//     // Use the JavaScript client library to create a search.list() API call.
-//     var request = gapi.client.youtube.search.list({
-//     part: 'snippet',
-//         q:query
-//     });
-//     // Send the request to the API server, call the onSearchResponse function when the data is returned
-//     request.execute(onSearchResponse);
-// }
-// // Triggered by this line: request.execute(onSearchResponse);
-// function onSearchResponse(response) {
-//     var responseString = JSON.stringify(response, '', 2);
-//     document.getElementById('movie-results').innerHTML = responseString;
-// }
+  // movieLink.appendChild(moviePoster);
+  // movieDiv.appendChild(heading);  
+  // movieDiv.appendChild(movieLink);
 
-
-
-
-
+}   
+}

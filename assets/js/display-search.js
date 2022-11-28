@@ -6,107 +6,105 @@ function getParams() {
 
   // Get the query and format values
   var query = searchParamsArr[0].split('=').pop();
-  var format = searchParamsArr[1].split('=').pop();
 
-  searchApi(query, format);
+ 
+  searchApi(query);
+  searchApi2(query);
 }
-
-function printResults(resultObj) {
-  console.log(resultObj);
-
-  // set up `<div>` to hold result content
-  var resultCard = document.createElement('div');
-  resultCard.classList.add('card', 'bg-light', 'text-dark', 'mb-3', 'p-3');
-
-  var resultBody = document.createElement('div');
-  resultBody.classList.add('card-body');
-  resultCard.append(resultBody);
-
-  var titleEl = document.createElement('h3');
-  titleEl.textContent = resultObj.title;
-
-  var bodyContentEl = document.createElement('p');
-  bodyContentEl.innerHTML =
-    '<strong>Date:</strong> ' + resultObj.date + '<br/>';
-
-  if (resultObj.subject) {
-    bodyContentEl.innerHTML +=
-      '<strong>Subjects:</strong> ' + resultObj.subject.join(', ') + '<br/>';
-  } else {
-    bodyContentEl.innerHTML +=
-      '<strong>Subjects:</strong> No subject for this entry.';
-  }
-
-  if (resultObj.description) {
-    bodyContentEl.innerHTML +=
-      '<strong>Description:</strong> ' + resultObj.description[0];
-  } else {
-    bodyContentEl.innerHTML +=
-      '<strong>Description:</strong>  No description for this entry.';
-  }
-
-  var linkButtonEl = document.createElement('a');
-  linkButtonEl.textContent = 'Read More';
-  linkButtonEl.setAttribute('href', resultObj.url);
-  linkButtonEl.classList.add('btn', 'btn-dark');
-
-  resultBody.append(titleEl, bodyContentEl, linkButtonEl);
-
-  resultContentEl.append(resultCard);
-}
-
-function searchApi(query, format) {
-  var locQueryUrl = 'https://www.loc.gov/search/?fo=json';
-
-  if (format) {
-    locQueryUrl = 'https://www.loc.gov/' + format + '/?fo=json';
-  }
-
-  locQueryUrl = locQueryUrl + '&q=' + query;
-
-  fetch(locQueryUrl)
-    .then(function (response) {
-      if (!response.ok) {
-        throw response.json();
-      }
-
-      return response.json();
-    })
-    .then(function (locRes) {
-      // write query to page so user knows what they are viewing
-      resultTextEl.textContent = locRes.search.query;
-
-      console.log(locRes);
-
-      if (!locRes.results.length) {
-        console.log('No results found!');
-        resultContentEl.innerHTML = '<h3>No results found, search again!</h3>';
-      } else {
-        resultContentEl.textContent = '';
-        for (var i = 0; i < locRes.results.length; i++) {
-          printResults(locRes.results[i]);
-        }
-      }
-    })
-    .catch(function (error) {
-      console.error(error);
-    });
-}
-
-function handleSearchFormSubmit(event) {
-  event.preventDefault();
-
-  var searchInputVal = document.querySelector('#search-input').value;
-  var formatInputVal = document.querySelector('#format-input').value;
-
-  if (!searchInputVal) {
-    console.error('You need a search input value!');
-    return;
-  }
-
-  searchApi(searchInputVal, formatInputVal);
-}
-
-searchFormEl.addEventListener('submit', handleSearchFormSubmit);
-
 getParams();
+
+
+
+function searchApi(query){
+
+var locQueryUrl = 'https://movie-database-alternative.p.rapidapi.com/?s=' + query + '&r=json&page=1';
+
+console.log(locQueryUrl); 
+var options = {
+  method: 'GET',
+  headers: {
+    'X-RapidAPI-Key': 'af3c4ac556msh4800601e994581cp141e52jsn02c4fb8865e3',
+    'X-RapidAPI-Host': 'movie-database-alternative.p.rapidapi.com'
+  }
+};
+
+fetch(locQueryUrl, options)
+    .then((response) => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw new Error("NETWORK RESPONSE ERROR");
+    }
+  })
+  .then(data => {
+    console.log(data);
+    displayMovie(data)
+  })
+  .catch((error) => console.error("FETCH ERROR:", error));
+
+ function displayMovie(data) {
+    const movie = data.Search[0];
+    const movieDiv = document.getElementById("Movie");
+    const movieTitle = movie.Title;
+    const heading = document.createElement("h1");
+    heading.innerHTML = movieTitle;
+    
+
+    const movieLink = document.createElement("a");
+    movieLink.setAttribute('href', 'https://www.imdb.com/title/' + movie.imdbID) 
+    
+
+    const moviePoster = document.createElement("img");
+    moviePoster.src = movie.Poster
+
+    movieLink.appendChild(moviePoster);
+    movieDiv.appendChild(heading);  
+    movieDiv.appendChild(movieLink);
+
+  }   
+}
+
+function searchApi2(query) {
+
+var locQueryUrl2 = 'https://ytube-videos.p.rapidapi.com/search-video?q='+ query + '%20trailer' + '%20video&max=1&lang=EN';
+
+console.log(locQueryUrl2);
+var options = {
+	method: 'GET',
+	headers: {
+		'X-RapidAPI-Key': 'af3c4ac556msh4800601e994581cp141e52jsn02c4fb8865e3',
+		'X-RapidAPI-Host': 'ytube-videos.p.rapidapi.com'
+	}
+};
+
+fetch(locQueryUrl2, options)
+.then((response) => {
+  if (response.ok) {
+    return response.json();
+  } else {
+    throw new Error("NETWORK RESPONSE ERROR");
+  }
+})
+.then(data => {
+  console.log(data);
+  displayYoutube(data)
+})
+.catch((error) => console.error("FETCH ERROR:", error));
+
+function displayYoutube(data) {
+  const youtube = data[0].link;
+  console.log(youtube);
+  const youtubeDiv = document.getElementById("Youtube");
+
+  
+  const link = document.createElement("a");
+  link.setAttribute('href', youtube)
+
+  const heading = document.createElement("h3");
+  heading.innerHTML = "Movie Trailer";
+
+  link.append(heading);
+  youtubeDiv.appendChild(link);
+  
+}
+}
